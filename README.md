@@ -28,7 +28,7 @@ https://drive.google.com/drive/folders/1zZ3acZEuL7NNnp6csgUkzWTPCKPYDwit?dmr=1&e
 
 **4.** Entre no repositório clonado utilizando `cd reciclaai`
 
-**5.** Instale todas as dependencias utilizando `bun install` (aviso Davi: adicionar comando para instalar dependencias do Python também)
+**5.** Instale todas as dependencias utilizando `bun install`
 
 **6.** Inicie o backend (API que roda o nosso modelo) e o site (para enviar os pedidos do modelo) utilizando `bun dev`
 
