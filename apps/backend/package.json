@@ -4,6 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "uv run fastapi dev",
-    "start": "uv run fastapi run"
+    "start": "uv run fastapi run",
+    "format": "bun run format:python; bun lint:python",
+    "lint": "bun run lint:python; bun run lint:biome",
+    "lint:python": "uv run ruff check app",
+    "format:python": "uv run ruff format app",
+    "lint:biome": "biome check",
+    "format:biome": "bun lint --fix --unsafe"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:"
   }
 }

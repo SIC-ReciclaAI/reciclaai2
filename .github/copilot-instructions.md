@@ -19,6 +19,7 @@ ReciclaAI usa IA (visão computacional baseada em CNN) para classificar resíduo
 
 ### Stack Tecnológica
 - **Runtime**: Bun 1.3 (NÃO npm/yarn/pnpm)
+- **Python Backend**: Use `uv` para rodar e instalar dependências em `apps/backend`
 - **Build**: Turborepo
 - **Lint/Format**: Biome 2.3.0
 - **Tipos**: TypeScript nativo em Go (`tsgo`)

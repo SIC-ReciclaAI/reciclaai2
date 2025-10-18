@@ -1,0 +1,41 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "tasks": {
+    "lint": {
+      "inputs": [
+        "app/**/*.py",
+        ".ruff.toml",
+        "pyproject.toml",
+        "$TURBO_ROOT$/bun.lock",
+        "$TURBO_ROOT$/package.json",
+        "package.json"
+      ],
+      "outputs": [],
+      "cache": true
+    },
+    "format": {
+      "inputs": [
+        "app/**/*.py",
+        ".ruff.toml",
+        "pyproject.toml",
+        "$TURBO_ROOT$/bun.lock",
+        "$TURBO_ROOT$/package.json",
+        "package.json"
+      ],
+      "outputs": ["app/**/*.py"],
+      "cache": true
+    },
+    "dev": {
+      "inputs": [
+        "app/**/*.py",
+        ".ruff.toml",
+        "pyproject.toml",
+        "$TURBO_ROOT$/bun.lock",
+        "$TURBO_ROOT$/package.json",
+        "package.json"
+      ],
+      "persistent": true,
+      "cache": false
+    }
+  }
+}
