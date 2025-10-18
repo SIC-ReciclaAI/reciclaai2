@@ -1,0 +1,9 @@
+{
+  "name": "@reciclaai/backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "uv run fastapi dev",
+    "start": "uv run fastapi run"
+  }
+}

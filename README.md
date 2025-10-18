@@ -14,21 +14,23 @@ https://drive.google.com/drive/folders/1zZ3acZEuL7NNnp6csgUkzWTPCKPYDwit?dmr=1&e
 
 **Front-end**: Next.js 16, Bun e TypeScript
 
-**Back-end**: Python 3.14, FastAPI (decidir outros)
+**Back-end**: Python 3.13, uv, FastAPI (decidir outros)
 
 # Instalação
 
-> **Pré-requisitos**: Python 3.14 instalado; Git instalado;
+> **Pré-requisitos**: Python 3.13 instalado; Git instalado
 
 **1.** Clone o repositório utilizando `git clone https://github.com/SIC-ReciclaAI/reciclaai`
 
 **2.** Instale o Bun utilizando `powershell -c "irm bun.sh/install.ps1|iex"` (ou, no Linux `curl -fsSL https://bun.com/install | bash`)
 
-**3.** Entre no repositório clonado utilizando `cd reciclaai`
+**3.** Instale o uv utilizando `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
 
-**4.** Instale todas as dependencias utilizando `bun install` (aviso Davi: adicionar comando para instalar dependencias do Python também)
+**4.** Entre no repositório clonado utilizando `cd reciclaai`
 
-**5.** Inicie o backend (API que roda o nosso modelo) e o site (para enviar os pedidos do modelo) utilizando `bun dev`
+**5.** Instale todas as dependencias utilizando `bun install` (aviso Davi: adicionar comando para instalar dependencias do Python também)
 
-**6.** O backend estará disponível em `localhost:4000/v1` e o site em `localhost:3000`
+**6.** Inicie o backend (API que roda o nosso modelo) e o site (para enviar os pedidos do modelo) utilizando `bun dev`
+
+**7.** O backend estará disponível em `localhost:8000` e o site em `localhost:3000`
 
