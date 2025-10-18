@@ -1,0 +1,33 @@
+{
+  "name": "@hiven/hiven",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo watch dev --experimental-write-cache",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint:root lint",
+    "lint:root": "biome check *.*",
+    "format": "turbo run format:root format",
+    "format:root": "bun lint:root --fix --unsafe",
+    "typecheck": "turbo run typecheck"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "catalog:",
+    "husky": "9.1.7",
+    "turbo": "2.5.8",
+    "typescript": "catalog:"
+  },
+  "catalog": {
+    "@biomejs/biome": "2.2.6",
+    "@typescript/native-preview": "7.0.0-dev.20250930.1",
+    "@types/bun": "1.2.23",
+    "typescript": "5.9.3",
+    "zod": "4.1.11"
+  },
+  "packageManager": "bun@1.2.24"
+}

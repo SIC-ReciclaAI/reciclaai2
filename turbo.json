@@ -1,0 +1,40 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": ["tsconfig.json", "**/tsconfig.json"],
+  "tasks": {
+    "typecheck": {
+      "inputs": ["src/**/*.{ts,tsx}", "$TURBO_ROOT$/bun.lock", "$TURBO_ROOT$/package.json", "package.json"],
+      "outputs": []
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "public/**", "$TURBO_ROOT$/bun.lock", "$TURBO_ROOT$/package.json", "package.json"],
+      "outputs": ["dist/**", "build/**"]
+    },
+    "lint": {
+      "inputs": ["src/**/*.{ts,tsx,js,jsx,json,css,html,md,yml,yaml}", "biome.json", "$TURBO_ROOT$/biome.json"],
+      "outputs": []
+    },
+    "format": {
+      "inputs": ["src/**/*.{ts,tsx,js,jsx,json,css,html,md,yml,yaml}", "biome.json", "$TURBO_ROOT$/biome.json"],
+      "outputs": []
+    },
+    "//#lint:root": {
+      "inputs": ["*.{json,md,yml,yaml,ts,js}", "$TURBO_ROOT$/biome.json"],
+      "outputs": []
+    },
+    "//#format:root": {
+      "inputs": ["*.{json,md,yml,yaml,ts,js}", "$TURBO_ROOT$/biome.json"],
+      "outputs": []
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
+    "start": {
+      "persistent": true,
+      "cache": false,
+      "dependsOn": ["build"]
+    }
+  }
+}
