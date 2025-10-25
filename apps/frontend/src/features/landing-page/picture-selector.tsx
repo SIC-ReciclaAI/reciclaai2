@@ -2,14 +2,17 @@
 
 import clsx from 'clsx';
 import { Camera, LoaderIcon, Upload } from 'lucide-react';
-import { useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAnalyzeImage } from '@/api/mutations/use-analyze-image';
 
-export default function HeroPictureSelector() {
-  const [imageBase64, setImageBase64] = useState<string | null>(null);
+interface HeroPictureSelectorProps {
+  imageBase64: string | null;
+  setImageBase64: (image: string | null) => void;
+}
+
+export default function HeroPictureSelector({ imageBase64, setImageBase64 }: HeroPictureSelectorProps) {
   const analyzeImageMutation = useAnalyzeImage();
 
   const handleInputFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

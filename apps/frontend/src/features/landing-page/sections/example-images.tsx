@@ -1,4 +1,6 @@
-import Image from 'next/image';
+'use client';
+
+import Image, { type StaticImageData } from 'next/image';
 import Organicos from '@/assets/landing-page/exemplos-reciclaveis/maca.jpg';
 import Metais from '@/assets/landing-page/exemplos-reciclaveis/metais.webp';
 import Papel from '@/assets/landing-page/exemplos-reciclaveis/papel.jpg';
@@ -6,13 +8,32 @@ import Plasticos from '@/assets/landing-page/exemplos-reciclaveis/plasticos.jpg'
 import Vidros from '@/assets/landing-page/exemplos-reciclaveis/vidros.webp';
 import { Button } from '@/components/ui/button';
 
-export default function ExampleImagesSection() {
+interface ExampleImagesSectionProps {
+  onSelectImage: (imageSrc: string) => void;
+}
+
+export default function ExampleImagesSection({ onSelectImage }: ExampleImagesSectionProps) {
+  const handleImageClick = async (imageData: StaticImageData, imageName: string) => {
+    try {
+      const response = await fetch(imageData.src);
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.onload = () => {
+        onSelectImage(reader.result as string);
+      };
+      reader.readAsDataURL(blob);
+    } catch (error) {
+      console.error(`Erro ao carregar imagem ${imageName}:`, error);
+    }
+  };
+
   return (
     <section className="mx-auto mt-6 mb-2 w-full max-w-lg text-center">
       <h3 className="mb-2 font-semibold text-base text-foreground">Ou experimente com estas imagens de exemplo:</h3>
       <div className="flex flex-wrap justify-center gap-4">
         <Button
           className="flex h-24 w-20 flex-col items-center gap-1 p-0 transition-transform duration-150 hover:scale-105 focus:scale-105 focus:outline-none active:scale-100"
+          onClick={() => handleImageClick(Plasticos, 'Plástico')}
           size="lg"
           tabIndex={0}
           type="button"
@@ -31,6 +52,7 @@ export default function ExampleImagesSection() {
         </Button>
         <Button
           className="flex h-24 w-20 flex-col items-center gap-1 p-0 transition-transform duration-150 hover:scale-105 focus:scale-105 focus:outline-none active:scale-100"
+          onClick={() => handleImageClick(Vidros, 'Vidro')}
           size="lg"
           tabIndex={0}
           type="button"
@@ -43,6 +65,7 @@ export default function ExampleImagesSection() {
         </Button>
         <Button
           className="flex h-24 w-20 flex-col items-center gap-1 p-0 transition-transform duration-150 hover:scale-105 focus:scale-105 focus:outline-none active:scale-100"
+          onClick={() => handleImageClick(Papel, 'Papel')}
           size="lg"
           tabIndex={0}
           type="button"
@@ -55,6 +78,7 @@ export default function ExampleImagesSection() {
         </Button>
         <Button
           className="flex h-24 w-20 flex-col items-center gap-1 p-0 transition-transform duration-150 hover:scale-105 focus:scale-105 focus:outline-none active:scale-100"
+          onClick={() => handleImageClick(Metais, 'Metal')}
           size="lg"
           tabIndex={0}
           type="button"
@@ -67,6 +91,7 @@ export default function ExampleImagesSection() {
         </Button>
         <Button
           className="flex h-24 w-20 flex-col items-center gap-1 p-0 transition-transform duration-150 hover:scale-105 focus:scale-105 focus:outline-none active:scale-100"
+          onClick={() => handleImageClick(Organicos, 'Orgânico')}
           size="lg"
           tabIndex={0}
           type="button"
