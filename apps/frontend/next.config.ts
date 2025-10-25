@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     turbopackFileSystemCacheForDev: true,
     turbopackFileSystemCacheForBuild: true
   },
+  cacheComponents: true,
   reactCompiler: true,
   typedRoutes: true
 };
