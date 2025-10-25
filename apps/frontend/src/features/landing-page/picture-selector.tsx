@@ -3,9 +3,9 @@
 import clsx from 'clsx';
 import { Camera, LoaderIcon, Upload } from 'lucide-react';
 import { toast } from 'sonner';
+import { useAnalyzeImage } from '@/api/mutations/use-analyze-image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAnalyzeImage } from '@/api/mutations/use-analyze-image';
 
 interface HeroPictureSelectorProps {
   imageBase64: string | null;
@@ -29,7 +29,7 @@ export default function HeroPictureSelector({ imageBase64, onImageSelect }: Hero
 
   const handleSubmit = () => {
     if (!imageBase64) return;
-    
+
     toast.info('Enviando imagem para análise...', {
       id: 'image-upload'
     });

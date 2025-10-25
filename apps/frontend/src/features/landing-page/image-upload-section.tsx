@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
-import ExampleImagesSection from './sections/example-images';
 import HeroPictureSelector from './picture-selector';
+import ExampleImagesSection from './sections/example-images';
 
 export default function ImageUploadSection() {
   const [imageBase64, setImageBase64] = useState<string | null>(null);
