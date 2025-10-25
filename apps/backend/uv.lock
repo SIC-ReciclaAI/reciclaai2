@@ -1082,6 +1082,9 @@ source = { virtual = "." }
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
     { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "pillow" },
+    { name = "python-multipart" },
     { name = "ruff" },
     { name = "tensorflow" },
 ]
@@ -1090,6 +1093,9 @@ dependencies = [
 requires-dist = [
     { name = "fastapi", extras = ["standard"], specifier = ">=0.119.0" },
     { name = "matplotlib", specifier = ">=3.9.0" },
+    { name = "numpy", specifier = ">=2.2.0" },
+    { name = "pillow", specifier = ">=11.0.0" },
+    { name = "python-multipart", specifier = ">=0.0.12" },
     { name = "ruff", specifier = ">=0.8.4" },
     { name = "tensorflow", specifier = ">=2.20.0" },
 ]

@@ -34,7 +34,8 @@ export default function HeroPictureSelector({ imageBase64, onImageSelect }: Hero
       id: 'image-upload'
     });
 
-    analyzeImageMutation.mutate(new File([], 'image.jpg'), {
+    analyzeImageMutation.mutate(imageBase64
+      , {
       onSuccess: () => {
         toast.success('Imagem enviada com sucesso!', { id: 'image-upload' });
       }

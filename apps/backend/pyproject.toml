@@ -9,5 +9,8 @@ dependencies = [
     "ruff>=0.8.4",
     "matplotlib>=3.9.0",
     "tensorflow>=2.20.0",
+    "pillow>=11.0.0",
+    "numpy>=2.2.0",
+    "python-multipart>=0.0.12",
 ]
 
