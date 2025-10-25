@@ -1,6 +1,7 @@
 """
 Configurações da aplicação ReciclaAI
 """
+import os
 from pathlib import Path
 
 # Configurações do modelo
@@ -12,10 +13,15 @@ CLASSES = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 
 # Configurações CORS
 CORS_ORIGINS = [
-    "http://localhost:3000",  # Frontend Next.js dev
+    "http://localhost:3000",
 ]
 
-# Configurações da API
-API_TITLE = "ReciclaAI API"
-API_DESCRIPTION = "API para classificação de resíduos usando IA"
-API_VERSION = "1.0.0"
+# Configurações de Performance
+# Define número de threads para TensorFlow (padrão: todos os cores)
+TF_NUM_THREADS = int(os.getenv("TF_NUM_THREADS", os.cpu_count() or 4))
+
+# Habilita otimizações XLA (Just-In-Time compilation)
+TF_ENABLE_XLA = os.getenv("TF_ENABLE_XLA", "1") == "1"
+
+# Habilita mixed precision (float16) para GPUs compatíveis
+TF_ENABLE_MIXED_PRECISION = os.getenv("TF_ENABLE_MIXED_PRECISION", "1") == "1"

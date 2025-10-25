@@ -57,10 +57,12 @@ def preprocess_image(image: Image.Image) -> np.ndarray:
         image = image.convert("RGB")
 
     # Redimensionar para o tamanho esperado pelo modelo (224x224)
-    image = image.resize(IMG_SIZE)
+    # LANCZOS para melhor qualidade, mais rápido que BICUBIC
+    image = image.resize(IMG_SIZE, Image.Resampling.LANCZOS)
 
-    # Converter para array numpy e normalizar (0-1)
-    img_array = np.array(image) / 255.0
+    # Converter para array numpy float32 (mais rápido que float64)
+    # e normalizar (0-1) em uma operação
+    img_array = np.array(image, dtype=np.float32) / 255.0
 
     # Adicionar dimensão do batch
     img_array = np.expand_dims(img_array, axis=0)

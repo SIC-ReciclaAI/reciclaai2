@@ -3,7 +3,7 @@ Rotas para informações da API e classes
 """
 from fastapi import APIRouter
 from app.schemas import RootResponse, HealthResponse, ClassesResponse
-from app.config import API_TITLE, API_VERSION, MODEL_PATH, CLASSES
+from app.config import MODEL_PATH, CLASSES
 from app.constants import CLASS_INFO
 from app.services.model_service import model_service
 
@@ -19,8 +19,6 @@ async def root() -> dict:
         Informações básicas da API
     """
     return {
-        "message": f"{API_TITLE}",
-        "version": API_VERSION,
         "status": "online",
         "model_loaded": model_service.is_loaded,
     }

@@ -1,10 +1,11 @@
 """
 Serviço de gerenciamento do modelo de IA
 """
+import os
 import tensorflow as tf
 import numpy as np
 from typing import Tuple, List, Dict
-from app.config import MODEL_PATH, CLASSES
+from app.config import MODEL_PATH, CLASSES, TF_NUM_THREADS, TF_ENABLE_XLA, TF_ENABLE_MIXED_PRECISION
 from app.constants import CLASS_INFO
 
 
@@ -14,14 +15,44 @@ class ModelService:
     def __init__(self):
         self.model = None
         self.is_loaded = False
+        self._configure_tensorflow()
+
+    def _configure_tensorflow(self) -> None:
+        """Configura TensorFlow para melhor performance"""
+        # Habilita otimizações de performance XLA (Just-In-Time compilation)
+        if TF_ENABLE_XLA:
+            tf.config.optimizer.set_jit(True)
+        
+        # Configuração de threads para melhor uso de CPU
+        tf.config.threading.set_inter_op_parallelism_threads(TF_NUM_THREADS)
+        tf.config.threading.set_intra_op_parallelism_threads(TF_NUM_THREADS)
+        
+        # Habilita mixed precision para GPUs (se disponível e configurado)
+        if TF_ENABLE_MIXED_PRECISION:
+            try:
+                tf.keras.mixed_precision.set_global_policy('mixed_float16')
+            except:
+                pass  # Se não suportar, continua com float32
 
     def load_model(self) -> None:
-        """Carrega o modelo treinado"""
+        """Carrega o modelo treinado com otimizações"""
         try:
             if MODEL_PATH.exists():
-                self.model = tf.keras.models.load_model(MODEL_PATH)
+                # Carrega modelo com compilação otimizada
+                self.model = tf.keras.models.load_model(
+                    MODEL_PATH,
+                    compile=True  # Garante que o modelo vem compilado
+                )
+                
+                # Warm-up: primeira predição é sempre mais lenta
+                # Fazemos uma predição dummy para inicializar o grafo
+                dummy_input = np.zeros((1, 224, 224, 3), dtype=np.float32)
+                _ = self.model.predict(dummy_input, verbose=0)
+                
                 self.is_loaded = True
-                print(f"✓ Modelo carregado de: {MODEL_PATH}")
+                print(f"✓ Modelo carregado e otimizado: {MODEL_PATH}")
+                print(f"✓ Usando {TF_NUM_THREADS} threads para inferência")
+                print(f"✓ XLA: {'Habilitado' if TF_ENABLE_XLA else 'Desabilitado'}")
             else:
                 print(f"⚠ AVISO: Modelo não encontrado em {MODEL_PATH}")
                 print("  Execute o notebook de treino para gerar o modelo")
@@ -31,7 +62,7 @@ class ModelService:
 
     def predict(self, img_array: np.ndarray) -> np.ndarray:
         """
-        Realiza predição com o modelo
+        Realiza predição com o modelo de forma otimizada
 
         Args:
             img_array: Array numpy com a imagem preprocessada
@@ -42,6 +73,11 @@ class ModelService:
         if not self.is_loaded or self.model is None:
             raise RuntimeError("Modelo não está carregado")
 
+        # Garante que o input está no tipo correto (float32 é mais rápido)
+        if img_array.dtype != np.float32:
+            img_array = img_array.astype(np.float32)
+
+        # Usa predict ao invés de __call__ para melhor caching
         predictions = self.model.predict(img_array, verbose=0)
         return predictions[0]
 
