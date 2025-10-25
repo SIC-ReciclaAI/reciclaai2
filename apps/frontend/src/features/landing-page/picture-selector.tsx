@@ -9,10 +9,10 @@ import { useAnalyzeImage } from '@/api/mutations/use-analyze-image';
 
 interface HeroPictureSelectorProps {
   imageBase64: string | null;
-  setImageBase64: (image: string | null) => void;
+  onImageSelect: (image: string | null) => void;
 }
 
-export default function HeroPictureSelector({ imageBase64, setImageBase64 }: HeroPictureSelectorProps) {
+export default function HeroPictureSelector({ imageBase64, onImageSelect }: HeroPictureSelectorProps) {
   const analyzeImageMutation = useAnalyzeImage();
 
   const handleInputFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +21,8 @@ export default function HeroPictureSelector({ imageBase64, setImageBase64 }: Her
 
     const reader = new FileReader();
     reader.onload = () => {
-      setImageBase64(reader.result as string);
+      const result = reader.result as string;
+      onImageSelect(result);
     };
     reader.readAsDataURL(file);
   };

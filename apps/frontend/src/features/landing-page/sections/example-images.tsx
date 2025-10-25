@@ -9,7 +9,7 @@ import Vidros from '@/assets/landing-page/exemplos-reciclaveis/vidros.webp';
 import { Button } from '@/components/ui/button';
 
 interface ExampleImagesSectionProps {
-  onSelectImage: (imageSrc: string) => void;
+  onSelectImage?: (imageSrc: string) => void;
 }
 
 export default function ExampleImagesSection({ onSelectImage }: ExampleImagesSectionProps) {
@@ -19,7 +19,7 @@ export default function ExampleImagesSection({ onSelectImage }: ExampleImagesSec
       const blob = await response.blob();
       const reader = new FileReader();
       reader.onload = () => {
-        onSelectImage(reader.result as string);
+        onSelectImage?.(reader.result as string);
       };
       reader.readAsDataURL(blob);
     } catch (error) {
