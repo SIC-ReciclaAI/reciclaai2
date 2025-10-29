@@ -1084,6 +1084,7 @@ dependencies = [
     { name = "matplotlib" },
     { name = "ruff" },
     { name = "tensorflow" },
+    { name = "uvicorn", extra = ["standard"] },
 ]
 
 [package.metadata]
@@ -1092,6 +1093,7 @@ requires-dist = [
     { name = "matplotlib", specifier = ">=3.9.0" },
     { name = "ruff", specifier = ">=0.8.4" },
     { name = "tensorflow", specifier = ">=2.20.0" },
+    { name = "uvicorn", extras = ["standard"], specifier = ">=0.38.0" },
 ]
 
 [[package]]
