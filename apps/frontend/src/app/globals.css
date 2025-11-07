@@ -115,10 +115,40 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
 
   button {
     @apply cursor-pointer;
+  }
+}
+
+@layer utilities {
+  /* Custom gradient utilities */
+  .gradient-primary {
+    @apply bg-linear-to-r from-primary to-primary/70;
+  }
+
+  .gradient-accent {
+    @apply bg-linear-to-br from-accent via-accent/80 to-accent/60;
+  }
+
+  /* Glassmorphism utilities */
+  .glass {
+    @apply backdrop-blur-sm bg-card/80 border border-primary/10;
+  }
+
+  .glass-strong {
+    @apply backdrop-blur-md bg-card/90 border border-primary/20;
+  }
+
+  /* Smooth transitions */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  /* Hover glow effect */
+  .hover-glow {
+    @apply transition-shadow duration-300 hover:shadow-lg hover:shadow-primary/20;
   }
 }

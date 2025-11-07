@@ -28,85 +28,113 @@ export default function ExampleImagesSection({ onSelectImage }: ExampleImagesSec
   };
 
   return (
-    <section className="mx-auto mt-6 mb-2 w-full max-w-lg text-center">
-      <h3 className="mb-2 font-semibold text-base text-foreground">Ou experimente com estas imagens de exemplo:</h3>
-      <div className="flex flex-wrap justify-center gap-4">
+    <section className="fade-in slide-in-from-bottom-3 mx-auto mt-10 mb-2 w-full max-w-2xl animate-in text-center duration-700">
+      <h3 className="mb-6 font-semibold text-base text-foreground/80">Ou experimente com estas imagens de exemplo:</h3>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
         <Button
-          className="flex h-24 w-20 flex-col items-center gap-1 p-0 transition-transform duration-150 hover:scale-105 focus:scale-105 focus:outline-none active:scale-100"
+          className="group flex h-auto w-full flex-col items-center gap-2 rounded-lg border border-primary/10 bg-card/50 p-3 transition-all duration-300 hover:scale-105 hover:border-primary/30 hover:bg-card hover:shadow-xl focus:scale-105 focus:outline-none active:scale-100"
           onClick={() => handleImageClick(Plasticos, 'Plástico')}
           size="lg"
           tabIndex={0}
           type="button"
           variant="ghost"
         >
-          <span className="block h-16 w-16 overflow-hidden rounded shadow">
+          <span className="block size-20 overflow-hidden rounded-lg shadow-md transition-transform duration-300 group-hover:shadow-xl">
             <Image
               alt="Exemplo Plástico"
-              className="h-full w-full object-cover"
-              height={64}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+              height={80}
               src={Plasticos}
-              width={64}
+              width={80}
             />
           </span>
-          <span className="text-foreground/70 text-xs">Plástico</span>
+          <span className="font-medium text-foreground/70 text-xs transition-colors duration-300 group-hover:text-foreground">
+            Plástico
+          </span>
         </Button>
         <Button
-          className="flex h-24 w-20 flex-col items-center gap-1 p-0 transition-transform duration-150 hover:scale-105 focus:scale-105 focus:outline-none active:scale-100"
+          className="group flex h-auto w-full flex-col items-center gap-2 rounded-lg border border-primary/10 bg-card/50 p-3 transition-all duration-300 hover:scale-105 hover:border-primary/30 hover:bg-card hover:shadow-xl focus:scale-105 focus:outline-none active:scale-100"
           onClick={() => handleImageClick(Vidros, 'Vidro')}
           size="lg"
           tabIndex={0}
           type="button"
           variant="ghost"
         >
-          <span className="block h-16 w-16 overflow-hidden rounded shadow">
-            <Image alt="Exemplo Vidro" className="h-full w-full object-cover" height={64} src={Vidros} width={64} />
+          <span className="block size-20 overflow-hidden rounded-lg shadow-md transition-transform duration-300 group-hover:shadow-xl">
+            <Image
+              alt="Exemplo Vidro"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+              height={80}
+              src={Vidros}
+              width={80}
+            />
           </span>
-          <span className="text-foreground/70 text-xs">Vidro</span>
+          <span className="font-medium text-foreground/70 text-xs transition-colors duration-300 group-hover:text-foreground">
+            Vidro
+          </span>
         </Button>
         <Button
-          className="flex h-24 w-20 flex-col items-center gap-1 p-0 transition-transform duration-150 hover:scale-105 focus:scale-105 focus:outline-none active:scale-100"
+          className="group flex h-auto w-full flex-col items-center gap-2 rounded-lg border border-primary/10 bg-card/50 p-3 transition-all duration-300 hover:scale-105 hover:border-primary/30 hover:bg-card hover:shadow-xl focus:scale-105 focus:outline-none active:scale-100"
           onClick={() => handleImageClick(Papel, 'Papel')}
           size="lg"
           tabIndex={0}
           type="button"
           variant="ghost"
         >
-          <span className="block h-16 w-16 overflow-hidden rounded shadow">
-            <Image alt="Exemplo Papel" className="h-full w-full object-cover" height={64} src={Papel} width={64} />
+          <span className="block size-20 overflow-hidden rounded-lg shadow-md transition-transform duration-300 group-hover:shadow-xl">
+            <Image
+              alt="Exemplo Papel"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+              height={80}
+              src={Papel}
+              width={80}
+            />
           </span>
-          <span className="text-foreground/70 text-xs">Papel</span>
+          <span className="font-medium text-foreground/70 text-xs transition-colors duration-300 group-hover:text-foreground">
+            Papel
+          </span>
         </Button>
         <Button
-          className="flex h-24 w-20 flex-col items-center gap-1 p-0 transition-transform duration-150 hover:scale-105 focus:scale-105 focus:outline-none active:scale-100"
+          className="group flex h-auto w-full flex-col items-center gap-2 rounded-lg border border-primary/10 bg-card/50 p-3 transition-all duration-300 hover:scale-105 hover:border-primary/30 hover:bg-card hover:shadow-xl focus:scale-105 focus:outline-none active:scale-100"
           onClick={() => handleImageClick(Metais, 'Metal')}
           size="lg"
           tabIndex={0}
           type="button"
           variant="ghost"
         >
-          <span className="block h-16 w-16 overflow-hidden rounded shadow">
-            <Image alt="Exemplo Metal" className="h-full w-full object-cover" height={64} src={Metais} width={64} />
+          <span className="block size-20 overflow-hidden rounded-lg shadow-md transition-transform duration-300 group-hover:shadow-xl">
+            <Image
+              alt="Exemplo Metal"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+              height={80}
+              src={Metais}
+              width={80}
+            />
           </span>
-          <span className="text-foreground/70 text-xs">Metal</span>
+          <span className="font-medium text-foreground/70 text-xs transition-colors duration-300 group-hover:text-foreground">
+            Metal
+          </span>
         </Button>
         <Button
-          className="flex h-24 w-20 flex-col items-center gap-1 p-0 transition-transform duration-150 hover:scale-105 focus:scale-105 focus:outline-none active:scale-100"
+          className="group flex h-auto w-full flex-col items-center gap-2 rounded-lg border border-primary/10 bg-card/50 p-3 transition-all duration-300 hover:scale-105 hover:border-primary/30 hover:bg-card hover:shadow-xl focus:scale-105 focus:outline-none active:scale-100"
           onClick={() => handleImageClick(Organicos, 'Orgânico')}
           size="lg"
           tabIndex={0}
           type="button"
           variant="ghost"
         >
-          <span className="block h-16 w-16 overflow-hidden rounded shadow">
+          <span className="block size-20 overflow-hidden rounded-lg shadow-md transition-transform duration-300 group-hover:shadow-xl">
             <Image
               alt="Exemplo Orgânico"
-              className="h-full w-full object-cover"
-              height={64}
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+              height={80}
               src={Organicos}
-              width={64}
+              width={80}
             />
           </span>
-          <span className="text-foreground/70 text-xs">Orgânico</span>
+          <span className="font-medium text-foreground/70 text-xs transition-colors duration-300 group-hover:text-foreground">
+            Orgânico
+          </span>
         </Button>
       </div>
     </section>

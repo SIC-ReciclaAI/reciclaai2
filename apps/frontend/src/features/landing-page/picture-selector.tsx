@@ -48,25 +48,36 @@ export default function HeroPictureSelector({ imageBase64, onImageSelect }: Hero
     <>
       <div
         className={clsx(
-          'mb-4 flex items-center justify-center overflow-hidden rounded-lg border-2 border-primary/20 bg-muted',
-          !imageBase64 && 'size-28',
-          imageBase64 && 'relative size-64 border-none'
+          'group mb-6 flex items-center justify-center overflow-hidden rounded-xl transition-all duration-300',
+          !imageBase64 &&
+            'size-32 border-2 border-primary/30 border-dashed bg-gradient-to-br from-muted to-muted/50 hover:border-primary/50 hover:shadow-lg',
+          imageBase64 && 'relative size-72 border-none shadow-2xl ring-2 ring-primary/20'
         )}
       >
         {imageBase64 ? (
-          <Image alt="Selected" className="object-fill" draggable="false" fill src={imageBase64} />
+          <Image
+            alt="Selected"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            draggable="false"
+            fill
+            src={imageBase64}
+          />
         ) : (
-          <Camera className="h-12 w-12 text-primary/60" />
+          <div className="flex flex-col items-center gap-2">
+            <Camera className="h-12 w-12 text-primary/60 transition-transform duration-300 group-hover:scale-110" />
+            <span className="font-medium text-primary/60 text-xs">Clique abaixo</span>
+          </div>
         )}
       </div>
 
       <div className="flex w-full items-center justify-center gap-x-2">
         <Button
-          className="flex w-full items-center gap-2 font-semibold"
+          className="group flex w-full items-center gap-2 font-semibold shadow-md transition-all hover:shadow-lg"
           onClick={() => document.getElementById('image-upload')?.click()}
           variant="default"
         >
-          <Camera className="size-4" /> Enviar {imageBase64 && 'outra'} foto
+          <Camera className="size-4 transition-transform group-hover:scale-110" />
+          {imageBase64 ? 'Enviar outra foto' : 'Enviar foto'}
         </Button>
 
         <Input
@@ -80,16 +91,16 @@ export default function HeroPictureSelector({ imageBase64, onImageSelect }: Hero
 
         {imageBase64 && (
           <Button
-            className="flex h-full! items-center gap-2 font-semibold"
+            className="group flex h-full items-center gap-2 font-semibold shadow-md transition-all hover:shadow-lg"
             disabled={createPredictionMutation.isPending}
             onClick={handleSubmit}
             variant="outline"
           >
-            <Upload />
+            <Upload className="transition-transform group-hover:scale-110" />
           </Button>
         )}
       </div>
-      <p className="text-foreground/60 text-sm">O processo de classificação pode demorar até 15 segundos.</p>
+      <p className="mt-3 text-center text-foreground/50 text-xs">⚡ Análise rápida em até 15 segundos</p>
     </>
   );
 }
