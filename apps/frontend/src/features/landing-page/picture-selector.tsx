@@ -1,9 +1,11 @@
 'use client';
 
 import clsx from 'clsx';
-import { Camera, LoaderIcon, Upload } from 'lucide-react';
+import { Camera, Upload } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { useAnalyzeImage } from '@/api/mutations/use-analyze-image';
+import { useCreatePredictionMutation } from '@/api/mutations/use-create-prediction';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -13,7 +15,8 @@ interface HeroPictureSelectorProps {
 }
 
 export default function HeroPictureSelector({ imageBase64, onImageSelect }: HeroPictureSelectorProps) {
-  const analyzeImageMutation = useAnalyzeImage();
+  const router = useRouter();
+  const createPredictionMutation = useCreatePredictionMutation();
 
   const handleInputFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -30,13 +33,13 @@ export default function HeroPictureSelector({ imageBase64, onImageSelect }: Hero
   const handleSubmit = () => {
     if (!imageBase64) return;
 
-    toast.info('Enviando imagem para análise...', {
-      id: 'image-upload'
-    });
-
-    analyzeImageMutation.mutate(new File([], 'image.jpg'), {
-      onSuccess: () => {
-        toast.success('Imagem enviada com sucesso!', { id: 'image-upload' });
+    createPredictionMutation.mutate(imageBase64, {
+      onSuccess: (data) => {
+        toast.success('Imagem enviada com sucesso!');
+        router.push(`/results?id=${data.id}`);
+      },
+      onError: () => {
+        toast.error('Erro ao analisar imagem. Tente novamente.');
       }
     });
   };
@@ -47,11 +50,11 @@ export default function HeroPictureSelector({ imageBase64, onImageSelect }: Hero
         className={clsx(
           'mb-4 flex items-center justify-center overflow-hidden rounded-lg border-2 border-primary/20 bg-muted',
           !imageBase64 && 'size-28',
-          imageBase64 && 'size-64 border-none'
+          imageBase64 && 'relative size-64 border-none'
         )}
       >
         {imageBase64 ? (
-          <img alt="Selected" className="h-full w-full object-fill" draggable="false" src={imageBase64} />
+          <Image alt="Selected" className="object-fill" draggable="false" fill src={imageBase64} />
         ) : (
           <Camera className="h-12 w-12 text-primary/60" />
         )}
@@ -60,7 +63,6 @@ export default function HeroPictureSelector({ imageBase64, onImageSelect }: Hero
       <div className="flex w-full items-center justify-center gap-x-2">
         <Button
           className="flex w-full items-center gap-2 font-semibold"
-          disabled={analyzeImageMutation.isPending}
           onClick={() => document.getElementById('image-upload')?.click()}
           variant="default"
         >
@@ -78,12 +80,12 @@ export default function HeroPictureSelector({ imageBase64, onImageSelect }: Hero
 
         {imageBase64 && (
           <Button
-            className="!h-full flex items-center gap-2 font-semibold"
-            disabled={analyzeImageMutation.isPending}
+            className="flex h-full! items-center gap-2 font-semibold"
+            disabled={createPredictionMutation.isPending}
             onClick={handleSubmit}
             variant="outline"
           >
-            {analyzeImageMutation.isPending ? <LoaderIcon className="h-4 w-4 animate-spin" /> : <Upload />}
+            <Upload />
           </Button>
         )}
       </div>

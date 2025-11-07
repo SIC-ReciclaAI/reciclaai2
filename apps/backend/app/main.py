@@ -1,13 +1,25 @@
 import base64
 import io
+import uuid
+from typing import Any, Dict
 
 import keras
 import numpy as np
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 from pydantic import BaseModel
 
 app = FastAPI()
+
+# Configuração CORS
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins=["*"],  # Permite todas as origens
+  allow_credentials=True,
+  allow_methods=["*"],  # Permite todos os métodos HTTP
+  allow_headers=["*"],  # Permite todos os headers
+)
 
 # Definições do modelo
 MODEL_PATH = "app/models/trashnet/reciclaAI_model_final.h5"
@@ -15,6 +27,9 @@ CLASSES = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 
 # Carrega o modelo uma vez na inicialização
 model = keras.models.load_model(MODEL_PATH)
+
+# Cache de resultados (em memória)
+predictions_cache: Dict[str, Dict[str, Any]] = {}
 
 
 class ImageRequest(BaseModel):
@@ -62,7 +77,7 @@ async def predict(request: ImageRequest):
     img_array = np.expand_dims(img_array, axis=0)
 
     # Faz a predição com verbose=0 para evitar logs desnecessários
-    preds = model.predict(img_array, verbose=0) # type: ignore
+    preds = model.predict(img_array, verbose=0)  # type: ignore
 
     # Converte para dicionário ordenado por probabilidade
     predictions = {}
@@ -72,9 +87,22 @@ async def predict(request: ImageRequest):
     # Ordena por probabilidade decrescente
     predictions = dict(sorted(predictions.items(), key=lambda item: item[1], reverse=True))
 
-    return {"predictions": predictions}
+    # Gera UUID e armazena no cache com a imagem original
+    prediction_id = str(uuid.uuid4())
+    predictions_cache[prediction_id] = {"predictions": predictions, "imageData": request.imageData}
+
+    return {"success": True, "id": prediction_id}
 
   except HTTPException:
     raise
   except Exception as e:
     raise HTTPException(status_code=500, detail=f"Erro interno ao processar imagem: {str(e)}")
+
+
+@app.get("/predictions/{id}")
+async def get_prediction_result(id: str):
+  """Recupera o resultado de uma predição pelo UUID"""
+  if id not in predictions_cache:
+    raise HTTPException(status_code=404, detail="Resultado não encontrado")
+
+  return predictions_cache[id]

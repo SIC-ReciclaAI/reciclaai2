@@ -82,7 +82,7 @@ function Component({ className, variant, ...props }: VariantProps<typeof variant
 ## Pontos de Integração
 
 ### Comunicação Backend
-- Backend: `localhost:4000/v1` (FastAPI com modelo CNN)
+- Backend: `localhost:8000` (FastAPI com modelo CNN, `POST /predict`, `GET /predictions/{id}`)
 - Frontend: `localhost:3000`
 - Deps Python: Ainda não configuradas (TODO)
 
