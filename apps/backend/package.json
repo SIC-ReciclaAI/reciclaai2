@@ -5,10 +5,10 @@
   "scripts": {
     "dev": "uv sync; uv run uvicorn app.main:app --reload",
     "start": "uv sync; uv run uvicorn app.main:app",
-    "format": "bun run format:python; bun lint:python",
+    "format": "bun run format:python; bun format:biome",
     "lint": "bun run lint:python; bun run lint:biome",
     "lint:python": "uv run ruff check app",
-    "format:python": "uv run ruff format app",
+    "format:python": "uv run ruff check app --fix && uv run ruff format app",
     "lint:biome": "biome check",
     "format:biome": "bun lint --fix --unsafe"
   },
