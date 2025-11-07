@@ -259,9 +259,32 @@ function ResultsContent() {
           </Link>
           <Button
             className="flex-1 shadow-md transition-all hover:shadow-lg"
-            onClick={() => {
-              // TODO: Implement share functionality
-              toast.success('Funcionalidade em desenvolvimento');
+            onClick={async () => {
+              const shareUrl = `${window.location.origin}/results?id=${predictionId}`;
+              const shareText = `Classifiquei um resíduo como ${categoryInfo.label} com ${(topConfidence * 100).toFixed(1)}% de confiança usando ReciclaAI! 🌍♻️`;
+
+              // Check if Web Share API is available (mobile devices)
+              if (navigator.share) {
+                try {
+                  await navigator.share({
+                    title: 'ReciclaAI - Resultado da Classificação',
+                    text: shareText,
+                    url: shareUrl
+                  });
+                  toast.success('Compartilhado com sucesso!');
+                } catch {
+                  // User cancelled sharing or error occurred
+                  // Silent fail for AbortError
+                }
+              } else {
+                // Fallback: Copy link to clipboard
+                try {
+                  await navigator.clipboard.writeText(shareUrl);
+                  toast.success('Link copiado para a área de transferência!');
+                } catch {
+                  toast.error('Erro ao copiar link');
+                }
+              }
             }}
             size="lg"
             variant="default"
