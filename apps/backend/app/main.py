@@ -69,7 +69,7 @@ async def predict(request: ImageRequest):
     if img.mode != "RGB":
       img = img.convert("RGB")
 
-    # Redimensiona para 224x224 com melhor qualidade
+    # Redimensiona para 224x224 com melhor qualidade (agora é 380)
     img = img.resize((224, 224), Image.Resampling.LANCZOS)
 
     # Converte para array numpy e normaliza
