@@ -22,6 +22,20 @@ Projeto desenvolvido no **Samsung Innovation Campus 2025**.
 - [Bun](https://bun.sh/)
 - (Opcional) Banco SQL externo se não quiser usar o SQLite embutido
 
+### Como instalar uv e Bun no Windows
+
+No PowerShell (pode ser necessário abrir como administrador), execute:
+
+```powershell
+powershell -ExecutionPolicy Bypass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+```powershell
+powershell -c "irm bun.sh/install.ps1|iex"
+```
+
+Isso baixa e configura o `uv` e o `bun` no PATH para que os comandos do restante do guia funcionem.
+
 ## Passo a passo de instalação
 
 ```bash
