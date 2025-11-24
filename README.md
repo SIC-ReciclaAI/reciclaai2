@@ -25,7 +25,8 @@ Projeto desenvolvido no **Samsung Innovation Campus 2025**.
 ## Passo a passo de instalação
 
 ```bash
-git clone https://github.com/SIC-ReciclaAI/reciclaai2
+git clone -b feature/sql-auth-readme --single-branch https://github.com/SIC-ReciclaAI/reciclaai2.git
+--git clone https://github.com/SIC-ReciclaAI/reciclaai2
 cd reciclaai2
 ```
 
