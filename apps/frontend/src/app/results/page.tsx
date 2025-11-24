@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
+import { useAuth } from '@/contexts/auth-context';
 
 const CATEGORY_INFO: Record<
   string,
@@ -100,13 +101,14 @@ const CATEGORY_INFO: Record<
 function ResultsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { token } = useAuth();
 
   const predictionId = searchParams.get('id');
   const {
     data: predictionData,
     isLoading: isPredictionLoading,
     isError: isPredictionError
-  } = usePrediction(predictionId || '');
+  } = usePrediction(predictionId || '', token);
 
   // Handle prediction query errors (expired or not found)
   useEffect(() => {
@@ -122,6 +124,17 @@ function ResultsContent() {
       router.push('/');
     }
   }, [predictionId, router]);
+
+  useEffect(() => {
+    if (!token) {
+      toast.error('Faça login para visualizar os resultados.');
+      router.push('/');
+    }
+  }, [router, token]);
+
+  if (!token) {
+    return null;
+  }
 
   if (isPredictionLoading || !predictionData) {
     return (

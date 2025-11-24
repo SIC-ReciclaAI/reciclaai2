@@ -1,35 +1,99 @@
 # ReciclaAI
 
-O ReciclaAI é um projeto que usa inteligência artificial e visão computacional para identificar se um material é reciclável e dar dicas de como descartar ou reciclar. A pessoa só tira uma foto e o sistema identifica o tipo de resíduo e orienta o que fazer.
+O ReciclaAI usa IA e visão computacional para classificar resíduos, indicar se são recicláveis e sugerir o descarte correto. A versão atual inclui autenticação de usuários (JWT) e histórico com as últimas imagens analisadas, armazenados em banco SQL.
 
-Este é um projeto do curso Samsung Innovation Campus 2025.
+Projeto desenvolvido no **Samsung Innovation Campus 2025**.
 
-# Documentos
+## Documentos de apoio
 
 <https://drive.google.com/drive/folders/1zZ3acZEuL7NNnp6csgUkzWTPCKPYDwit?dmr=1&ec=wgc-drive-globalnav-goto>
 
-# Tecnologias
+## Principais tecnologias
 
-**Repositório**: Bun e Turborepo (monorepo)
+- **Monorepo**: Turborepo + Bun
+- **Frontend**: Next.js 16, React 19, TypeScript, Tailwind
+- **Backend**: Python 3.13, FastAPI, TensorFlow, SQLAlchemy, JWT
+- **Banco padrão**: SQLite (pode ser alterado via `DATABASE_URL`)
 
-**Front-end**: Next.js 16, Bun e TypeScript
+## Pré-requisitos
 
-**Back-end**: Python 3.13, uv, FastAPI (decidir outros)
+- Git
+- Python 3.13 + [uv](https://docs.astral.sh/uv/)
+- [Bun](https://bun.sh/)
+- (Opcional) Banco SQL externo se não quiser usar o SQLite embutido
 
-# Instalação
+## Passo a passo de instalação
 
-> **Pré-requisitos**: Python 3.13 instalado; Git instalado
+```bash
+git clone https://github.com/SIC-ReciclaAI/reciclaai2
+cd reciclaai2
+```
 
-**1.** Clone o repositório utilizando `git clone https://github.com/SIC-ReciclaAI/reciclaai2`
+### Backend (`apps/backend`)
 
-**2.** Instale o Bun utilizando `powershell -c "irm bun.sh/install.ps1|iex"` (ou, no Linux `curl -fsSL https://bun.com/install | bash`)
+```bash
+cd apps/backend
+uv sync                # instala dependências no ambiente virtual gerenciado pelo uv
+```
 
-**3.** Instale o uv utilizando `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
+Variáveis importantes (`.env`, ou exportadas antes de rodar o servidor):
 
-**4.** Entre no repositório clonado utilizando `cd reciclaai2`
+| Variável | Descrição | Padrão |
+| --- | --- | --- |
+| `DATABASE_URL` | URL SQLAlchemy do banco | `sqlite:///./reciclaai.db` |
+| `JWT_SECRET_KEY` | Segredo usado para assinar os tokens | `reciclaai-secret` |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | Expiração do token JWT | `4320` (3 dias) |
 
-**5.** Instale todas as dependencias utilizando `bun install`
+Rodar o backend em desenvolvimento:
 
-**6.** Inicie o backend (API que roda o nosso modelo) e o site (para enviar os pedidos do modelo) utilizando `bun dev`
+```bash
+uv run uvicorn app.main:app --reload
+# disponível em http://localhost:8000
+```
 
-**7.** O backend estará disponível em `localhost:8000` e o site em `localhost:3000`
+### Frontend (`apps/frontend`)
+
+```bash
+cd apps/frontend
+bun install
+```
+
+Crie um `.env.local` (ou use variáveis do sistema):
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
+
+Rodar o site:
+
+```bash
+bun run dev
+# disponível em http://localhost:3000
+```
+
+> Observação: como estamos em um monorepo, abra dois terminais — um para o backend (uvicorn) e outro para o frontend (Next.js).
+
+## Fluxo principal
+
+1. Usuário cria conta ou faz login (dados salvos no banco SQL).
+2. Faz upload de uma imagem e a API analisa com o modelo TensorFlow.
+3. Resultado + imagem são guardados em `prediction_history`, permitindo listar as últimas análises em qualquer dispositivo autenticado.
+
+## Scripts úteis
+
+| Comando | Local | Descrição |
+| --- | --- | --- |
+| `uv sync` | `apps/backend` | Instala/atualiza deps Python |
+| `uv run uvicorn app.main:app --reload` | `apps/backend` | Sobe a API FastAPI |
+| `bun install` | `apps/frontend` | Instala deps do Next.js |
+| `bun run dev` | `apps/frontend` | Sobe o frontend em modo dev |
+
+## Próximos passos sugeridos
+
+- Configurar Postgres/MySQL em produção (atualizando `DATABASE_URL`).
+- Configurar HTTPS e domínio público para expor o backend.
+- Adicionar testes automatizados para rotas protegidas e componentes do front.
+
+---
+
+Sinta-se à vontade para abrir issues ou PRs com melhorias. ♻️💚

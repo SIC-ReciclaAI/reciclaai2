@@ -1,14 +1,29 @@
 import base64
 import io
+import json
 import uuid
-from typing import Any, Dict
 
 import keras
 import numpy as np
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import func, select
+from sqlalchemy.orm import Session
+
 from PIL import Image
-from pydantic import BaseModel
+
+from .auth import create_access_token, get_current_user, get_password_hash, verify_password
+from .database import Base, engine, get_db
+from .models_sql import PredictionHistory, User
+from .schemas import (
+    HistoryListResponse,
+    ImageRequest,
+    LoginRequest,
+    PredictionResponse,
+    RegisterRequest,
+    TokenResponse,
+    UserResponse,
+)
 
 app = FastAPI()
 
@@ -28,12 +43,9 @@ CLASSES = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 # Carrega o modelo uma vez na inicialização
 model = keras.models.load_model(MODEL_PATH)
 
-# Cache de resultados (em memória)
-predictions_cache: Dict[str, Dict[str, Any]] = {}
-
-
-class ImageRequest(BaseModel):
-  imageData: str
+@app.on_event("startup")
+def on_startup() -> None:
+  Base.metadata.create_all(bind=engine)
 
 
 @app.get("/")
@@ -41,8 +53,40 @@ async def root():
   return {"message": "Olá, Mundo!"}
 
 
+@app.post("/auth/register", response_model=UserResponse)
+async def register_user(payload: RegisterRequest, db: Session = Depends(get_db)):
+  existing_user = db.scalar(select(User).where(User.email == payload.email))
+  if existing_user:
+    raise HTTPException(status_code=400, detail="E-mail já cadastrado")
+
+  user = User(name=payload.name, email=payload.email, hashed_password=get_password_hash(payload.password))
+  db.add(user)
+  db.commit()
+  db.refresh(user)
+  return user
+
+
+@app.post("/auth/login", response_model=TokenResponse)
+async def login(payload: LoginRequest, db: Session = Depends(get_db)):
+  user = db.scalar(select(User).where(User.email == payload.email))
+  if not user or not verify_password(payload.password, user.hashed_password):
+    raise HTTPException(status_code=400, detail="E-mail ou senha inválidos")
+
+  token = create_access_token({"sub": user.id})
+  return TokenResponse(access_token=token, user=user)
+
+
+@app.get("/auth/me", response_model=UserResponse)
+async def get_profile(current_user: User = Depends(get_current_user)):
+  return current_user
+
+
 @app.post("/predict")
-async def predict(request: ImageRequest):
+async def predict(
+  request: ImageRequest,
+  current_user: User = Depends(get_current_user),
+  db: Session = Depends(get_db),
+):
   try:
     # Remove o prefixo data:image/...;base64, se presente
     image_data = request.imageData
@@ -87,9 +131,16 @@ async def predict(request: ImageRequest):
     # Ordena por probabilidade decrescente
     predictions = dict(sorted(predictions.items(), key=lambda item: item[1], reverse=True))
 
-    # Gera UUID e armazena no cache com a imagem original
+    # Persiste no histórico
     prediction_id = str(uuid.uuid4())
-    predictions_cache[prediction_id] = {"predictions": predictions, "imageData": request.imageData}
+    history_entry = PredictionHistory(
+      id=prediction_id,
+      user_id=current_user.id,
+      predictions_json=json.dumps(predictions),
+      image_data=request.imageData,
+    )
+    db.add(history_entry)
+    db.commit()
 
     return {"success": True, "id": prediction_id}
 
@@ -99,10 +150,49 @@ async def predict(request: ImageRequest):
     raise HTTPException(status_code=500, detail=f"Erro interno ao processar imagem: {str(e)}")
 
 
-@app.get("/predictions/{id}")
-async def get_prediction_result(id: str):
+@app.get("/predictions/{id}", response_model=PredictionResponse)
+async def get_prediction_result(
+  id: str,
+  current_user: User = Depends(get_current_user),
+  db: Session = Depends(get_db),
+):
   """Recupera o resultado de uma predição pelo UUID"""
-  if id not in predictions_cache:
+  history_entry = db.get(PredictionHistory, id)
+  if history_entry is None or history_entry.user_id != current_user.id:
     raise HTTPException(status_code=404, detail="Resultado não encontrado")
 
-  return predictions_cache[id]
+  return PredictionResponse(
+    id=history_entry.id,
+    predictions=json.loads(history_entry.predictions_json),
+    imageData=history_entry.image_data,
+    createdAt=history_entry.created_at,
+  )
+
+
+@app.get("/history", response_model=HistoryListResponse)
+async def get_history(
+  limit: int = Query(5, ge=1, le=20),
+  current_user: User = Depends(get_current_user),
+  db: Session = Depends(get_db),
+):
+  query = (
+    select(PredictionHistory)
+    .where(PredictionHistory.user_id == current_user.id)
+    .order_by(PredictionHistory.created_at.desc())
+    .limit(limit)
+  )
+  histories = list(db.scalars(query).all())
+
+  total_stmt = select(func.count()).where(PredictionHistory.user_id == current_user.id)
+  total = db.scalar(total_stmt) or 0
+
+  items = [
+    PredictionResponse(
+      id=item.id,
+      predictions=json.loads(item.predictions_json),
+      imageData=item.image_data,
+      createdAt=item.created_at,
+    )
+    for item in histories
+  ]
+  return HistoryListResponse(total=total, items=items)

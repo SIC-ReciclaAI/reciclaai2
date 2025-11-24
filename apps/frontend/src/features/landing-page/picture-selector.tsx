@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { useCreatePredictionMutation } from '@/api/mutations/use-create-prediction';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useAuth } from '@/contexts/auth-context';
 
 interface HeroPictureSelectorProps {
   imageBase64: string | null;
@@ -17,6 +18,7 @@ interface HeroPictureSelectorProps {
 export default function HeroPictureSelector({ imageBase64, onImageSelect }: HeroPictureSelectorProps) {
   const router = useRouter();
   const createPredictionMutation = useCreatePredictionMutation();
+  const { token, user } = useAuth();
 
   const handleInputFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -32,16 +34,23 @@ export default function HeroPictureSelector({ imageBase64, onImageSelect }: Hero
 
   const handleSubmit = () => {
     if (!imageBase64) return;
+    if (!token || !user) {
+      toast.error('Faça login para analisar imagens.');
+      return;
+    }
 
-    createPredictionMutation.mutate(imageBase64, {
-      onSuccess: (data) => {
-        toast.success('Imagem enviada com sucesso!');
-        router.push(`/results?id=${data.id}`);
-      },
-      onError: () => {
-        toast.error('Erro ao analisar imagem. Tente novamente.');
+    createPredictionMutation.mutate(
+      { imageData: imageBase64, token },
+      {
+        onSuccess: (data) => {
+          toast.success('Imagem enviada com sucesso!');
+          router.push(`/results?id=${data.id}`);
+        },
+        onError: () => {
+          toast.error('Erro ao analisar imagem. Tente novamente.');
+        }
       }
-    });
+    );
   };
 
   return (
@@ -92,7 +101,7 @@ export default function HeroPictureSelector({ imageBase64, onImageSelect }: Hero
         {imageBase64 && (
           <Button
             className="group flex h-full items-center gap-2 font-semibold shadow-md transition-all hover:shadow-lg"
-            disabled={createPredictionMutation.isPending}
+            disabled={createPredictionMutation.isPending || !user}
             onClick={handleSubmit}
             variant="outline"
           >
@@ -100,7 +109,9 @@ export default function HeroPictureSelector({ imageBase64, onImageSelect }: Hero
           </Button>
         )}
       </div>
-      <p className="mt-3 text-center text-foreground/50 text-xs">⚡ Análise rápida em até 15 segundos</p>
+      <p className="mt-3 text-center text-foreground/50 text-xs">
+        ⚡ Análise rápida em até 15 segundos — {user ? 'envie sua imagem!' : 'faça login para habilitar a análise.'}
+      </p>
     </>
   );
 }

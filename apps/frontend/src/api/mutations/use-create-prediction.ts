@@ -1,17 +1,25 @@
 import { useMutation } from '@tanstack/react-query';
+import { API_BASE_URL } from '@/lib/env';
+
+type PredictionPayload = {
+  imageData: string;
+  token: string;
+};
 
 export const useCreatePredictionMutation = () => {
   const mutation = useMutation({
-    mutationFn: async (imageData: string) => {
-      const req = await fetch('http://localhost:8000/predict', {
+    mutationFn: async ({ imageData, token }: PredictionPayload) => {
+      const req = await fetch(`${API_BASE_URL}/predict`, {
         method: 'POST',
         body: JSON.stringify({ imageData }),
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         }
       });
       if (!req.ok) {
-        throw new Error('Network response was not ok');
+        const errorBody = await req.json().catch(() => ({}));
+        throw new Error(errorBody?.detail ?? 'Erro ao enviar imagem');
       }
       const res = await req.json();
       return res as { success: boolean; id: string };

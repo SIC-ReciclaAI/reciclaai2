@@ -5,7 +5,7 @@ import Organicos from '@/assets/landing-page/exemplos-reciclaveis/maca.jpg';
 import Metais from '@/assets/landing-page/exemplos-reciclaveis/metais.webp';
 import Papel from '@/assets/landing-page/exemplos-reciclaveis/papel.jpg';
 import Plasticos from '@/assets/landing-page/exemplos-reciclaveis/plasticos.jpg';
-import Vidros from '@/assets/landing-page/exemplos-reciclaveis/vidros.webp';
+import Vidros from '@/assets/landing-page/exemplos-reciclaveis/vidros.jpg';
 import { Button } from '@/components/ui/button';
 
 interface ExampleImagesSectionProps {

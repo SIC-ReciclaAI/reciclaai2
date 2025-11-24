@@ -1,6 +1,7 @@
 import ky from 'ky';
+import { API_BASE_URL } from '@/lib/env';
 
 export const apiClient = ky.create({
-  prefixUrl: 'https://localhost:8000',
+  prefixUrl: API_BASE_URL,
   timeout: 10000
 });

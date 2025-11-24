@@ -1,18 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import { API_BASE_URL } from '@/lib/env';
 
-type PredictionResult = {
+export type HistoryItem = {
   id: string;
   predictions: Record<string, number>;
   imageData: string;
   createdAt: string;
 };
 
-export const usePrediction = (id: string, token: string | null) => {
+export const usePredictionHistory = (token: string | null, limit = 5) => {
   return useQuery({
-    queryKey: ['prediction', id, token],
+    queryKey: ['history', token, limit],
+    enabled: Boolean(token),
     queryFn: async () => {
-      const req = await fetch(`${API_BASE_URL}/predictions/${id}`, {
+      const req = await fetch(`${API_BASE_URL}/history?limit=${limit}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -21,13 +22,12 @@ export const usePrediction = (id: string, token: string | null) => {
       });
       if (!req.ok) {
         const errorBody = await req.json().catch(() => ({}));
-        throw new Error(errorBody?.detail ?? 'Não foi possível buscar o resultado');
+        throw new Error(errorBody?.detail ?? 'Erro ao carregar histórico');
       }
       const res = await req.json();
-      return res as PredictionResult;
-    },
-    enabled: Boolean(id && token),
-    retry: 1,
-    retryDelay: 1000
+      return res as { total: number; items: HistoryItem[] };
+    }
   });
 };
+
+
