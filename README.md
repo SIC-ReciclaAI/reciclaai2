@@ -43,7 +43,7 @@ git clone -b feature/sql-auth-readme --single-branch https://github.com/SIC-Reci
 cd reciclaai2
 ```
 
-## 🐳 Executando com Docker (Recomendado)
+## 🐳 Executando com Docker
 
 A forma mais simples de rodar o projeto é usando Docker. Você só precisa ter o Docker Desktop instalado.
 
@@ -51,17 +51,62 @@ A forma mais simples de rodar o projeto é usando Docker. Você só precisa ter 
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e rodando
 
-### Como rodar
+### Opção 1: Rodar sem código local (Mais fácil) ⭐
 
-1. Na pasta raiz do projeto, execute:
+**Ideal para quem só quer usar a aplicação sem desenvolver.**
+
+1. Baixe os arquivos necessários:
+   - `docker-compose.pull.yml`
+   - `run-reciclaai.sh` (Linux/Mac) ou `run-reciclaai.ps1` (Windows)
+
+2. Execute o script:
+
+   **Linux/Mac:**
+   ```bash
+   chmod +x run-reciclaai.sh
+   ./run-reciclaai.sh
+   ```
+
+   **Windows (PowerShell):**
+   ```powershell
+   .\run-reciclaai.ps1
+   ```
+
+   **Ou manualmente:**
+   ```bash
+   docker compose -f docker-compose.pull.yml pull
+   docker compose -f docker-compose.pull.yml up -d
+   ```
+
+3. Acesse no navegador:
+   - **Frontend**: http://localhost:3000
+   - **Backend (docs)**: http://localhost:8000/docs
+
+**Vantagens:**
+- ✅ Não precisa fazer `git clone`
+- ✅ Não precisa ter o código local
+- ✅ Apenas 2 arquivos necessários
+- ✅ Imagens pré-construídas e otimizadas
+
+### Opção 2: Rodar com código local (Desenvolvimento)
+
+**Ideal para quem quer desenvolver ou modificar o código.**
+
+1. Clone o repositório:
+```bash
+git clone -b feature/sql-auth-readme --single-branch https://github.com/SIC-ReciclaAI/reciclaai2.git
+cd reciclaai2
+```
+
+2. Na pasta raiz do projeto, execute:
 
 ```bash
 docker compose up --build
 ```
 
-2. Aguarde a construção das imagens (primeira vez pode levar alguns minutos).
+3. Aguarde a construção das imagens (primeira vez pode levar alguns minutos).
 
-3. Acesse no navegador:
+4. Acesse no navegador:
    - **Frontend**: http://localhost:3000
    - **Backend (docs)**: http://localhost:8000/docs
 
@@ -70,6 +115,8 @@ docker compose up --build
 ```bash
 # Parar os containers
 docker compose down
+# ou (se usando imagens pré-construídas)
+docker compose -f docker-compose.pull.yml down
 
 # Parar e remover volumes (limpa o banco de dados)
 docker compose down -v
@@ -77,7 +124,7 @@ docker compose down -v
 # Ver logs
 docker compose logs -f
 
-# Reconstruir após mudanças no código
+# Reconstruir após mudanças no código (apenas Opção 2)
 docker compose up --build
 ```
 
@@ -87,6 +134,10 @@ docker compose up --build
 - ✅ Ambiente isolado e consistente
 - ✅ Funciona em qualquer sistema operacional
 - ✅ Fácil de compartilhar e distribuir
+
+### Publicar suas próprias imagens
+
+Se quiser publicar as imagens no Docker Hub para que outros possam usar sem o código local, veja o guia em [PUBLISH_DOCKER.md](./PUBLISH_DOCKER.md).
 
 ---
 
