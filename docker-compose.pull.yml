@@ -1,6 +1,6 @@
 services:
   backend:
-    image: sicreciclaai/reciclaai-backend:latest
+    image: ecmartins/reciclaai-backend:latest
     container_name: reciclaai-backend
     ports:
       - "8000:8000"
@@ -10,7 +10,7 @@ services:
       - DATABASE_URL=sqlite:///./reciclaai.db
 
   frontend:
-    image: sicreciclaai/reciclaai-frontend:latest
+    image: ecmartins/reciclaai-frontend:latest
     container_name: reciclaai-frontend
     ports:
       - "3000:3000"

@@ -32,8 +32,8 @@ docker tag reciclaai2-frontend:latest SEU_USUARIO/reciclaai-frontend:latest
 
 **Exemplo:**
 ```bash
-docker tag reciclaai2-backend:latest sicreciclaai/reciclaai-backend:latest
-docker tag reciclaai2-frontend:latest sicreciclaai/reciclaai-frontend:latest
+docker tag reciclaai2-backend:latest ecmartins/reciclaai-backend:latest
+docker tag reciclaai2-frontend:latest ecmartins/reciclaai-frontend:latest
 ```
 
 ### 3. Publicar as imagens
@@ -45,15 +45,15 @@ docker push SEU_USUARIO/reciclaai-frontend:latest
 
 **Exemplo:**
 ```bash
-docker push sicreciclaai/reciclaai-backend:latest
-docker push sicreciclaai/reciclaai-frontend:latest
+docker push ecmartins/reciclaai-backend:latest
+docker push ecmartins/reciclaai-frontend:latest
 ```
 
 ⚠️ **Nota:** A primeira vez pode demorar bastante (as imagens são grandes, especialmente a do backend com TensorFlow).
 
 ### 4. Atualizar o docker-compose.pull.yml
 
-Edite o arquivo `docker-compose.pull.yml` e substitua `sicreciclaai` pelo seu username do Docker Hub:
+Edite o arquivo `docker-compose.pull.yml` e substitua `ecmartins` pelo seu username do Docker Hub (se diferente):
 
 ```yaml
 services:
@@ -62,6 +62,8 @@ services:
   frontend:
     image: SEU_USUARIO/reciclaai-frontend:latest
 ```
+
+**Nota:** O arquivo já está configurado com `ecmartins` como padrão.
 
 ### 5. (Opcional) Criar uma organização no Docker Hub
 
