@@ -69,7 +69,7 @@ A forma mais simples de rodar o projeto é usando Docker. Você só precisa ter 
 
    **Windows (PowerShell):**
    ```powershell
-   .\run-reciclaai.ps1
+   powershell -ExecutionPolicy Bypass -File .\run-reciclaai.ps1
    ```
 
    **Ou manualmente:**
