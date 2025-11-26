@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { ArrowLeft, Camera, CheckCircle2, Leaf, LoaderIcon, Recycle, Sparkles, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';

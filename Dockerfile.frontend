@@ -1,0 +1,23 @@
+FROM oven/bun:1 AS base
+
+WORKDIR /app
+
+# Copia arquivos de workspace raiz necessários para o Bun (catálogo, lockfile e turbo)
+COPY package.json bun.lock turbo.json ./
+
+# Copia os pacotes usados na workspace (frontend + package.json do backend)
+COPY apps/frontend ./apps/frontend
+COPY apps/backend/package.json ./apps/backend/package.json
+
+# Instala dependências de toda a workspace (inclui frontend)
+RUN bun install
+
+WORKDIR /app/apps/frontend
+
+EXPOSE 3000
+
+ENV NEXT_PUBLIC_API_URL=http://localhost:8000
+
+CMD ["bun", "run", "dev"]
+
+

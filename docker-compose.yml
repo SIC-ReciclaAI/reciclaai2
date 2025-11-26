@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: reciclaai-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_data:/app/apps/backend
+    environment:
+      - DATABASE_URL=sqlite:///./reciclaai.db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: reciclaai-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+
+volumes:
+  backend_data:
+
+

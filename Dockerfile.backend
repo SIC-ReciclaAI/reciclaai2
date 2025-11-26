@@ -1,0 +1,29 @@
+FROM python:3.13-slim AS base
+
+WORKDIR /app
+
+# Instala dependências de sistema necessárias para numpy, tensorflow, pillow etc.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libglib2.0-0 \
+    libgl1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copia arquivos do backend
+COPY apps/backend/pyproject.toml apps/backend/uv.lock ./apps/backend/
+COPY apps/backend/app ./apps/backend/app
+
+WORKDIR /app/apps/backend
+
+# Instala uv e dependências Python
+RUN pip install --no-cache-dir uv && uv sync --no-dev
+
+# Expõe a porta do FastAPI
+EXPOSE 8000
+
+# Usa o virtualenv criado pelo uv
+ENV PATH="/app/apps/backend/.venv/Scripts:/app/apps/backend/.venv/bin:$PATH"
+
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+

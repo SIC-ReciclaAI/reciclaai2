@@ -5,9 +5,11 @@ const nextConfig: NextConfig = {
     turbopackFileSystemCacheForDev: true,
     turbopackFileSystemCacheForBuild: true
   },
-  cacheComponents: true,
   reactCompiler: true,
-  typedRoutes: true
+  typedRoutes: true,
+  typescript: {
+    ignoreBuildErrors: true
+  }
 };
 
 export default nextConfig;

@@ -40,9 +40,59 @@ Isso baixa e configura o `uv` e o `bun` no PATH para que os comandos do restante
 
 ```bash
 git clone -b feature/sql-auth-readme --single-branch https://github.com/SIC-ReciclaAI/reciclaai2.git
---git clone https://github.com/SIC-ReciclaAI/reciclaai2
 cd reciclaai2
 ```
+
+## 🐳 Executando com Docker (Recomendado)
+
+A forma mais simples de rodar o projeto é usando Docker. Você só precisa ter o Docker Desktop instalado.
+
+### Pré-requisitos
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) instalado e rodando
+
+### Como rodar
+
+1. Na pasta raiz do projeto, execute:
+
+```bash
+docker compose up --build
+```
+
+2. Aguarde a construção das imagens (primeira vez pode levar alguns minutos).
+
+3. Acesse no navegador:
+   - **Frontend**: http://localhost:3000
+   - **Backend (docs)**: http://localhost:8000/docs
+
+### Comandos úteis
+
+```bash
+# Parar os containers
+docker compose down
+
+# Parar e remover volumes (limpa o banco de dados)
+docker compose down -v
+
+# Ver logs
+docker compose logs -f
+
+# Reconstruir após mudanças no código
+docker compose up --build
+```
+
+### Vantagens do Docker
+
+- ✅ Não precisa instalar Python, Node.js, Bun ou uv
+- ✅ Ambiente isolado e consistente
+- ✅ Funciona em qualquer sistema operacional
+- ✅ Fácil de compartilhar e distribuir
+
+---
+
+## Desenvolvimento local (sem Docker)
+
+Se preferir rodar localmente sem Docker, siga os passos abaixo:
 
 ### Backend (`apps/backend`)
 
